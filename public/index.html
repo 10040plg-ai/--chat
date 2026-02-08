@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기송신유 단톡방</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <div id="side-logo">💬 GS-YU</div>
+
+    <div id="step-profile" class="container">
+        <div class="profile-upload-area">
+            <div class="circle-frame" onclick="document.getElementById('profileImg').click()">
+                <img id="preview" src="https://via.placeholder.com/150" alt="Profile">
+                <div class="plus-btn"><span class="material-icons">add</span></div>
+            </div>
+            <input type="file" id="profileImg" accept="image/*" style="display:none;" onchange="previewImage(this)">
+        </div>
+        <div class="name-input-area">
+            <span class="material-icons">edit</span>
+            <input type="text" id="username" placeholder="이름을 입력하세요">
+        </div>
+        <button class="next-btn blue" onclick="goToStep(2)">다음</button>
+    </div>
+
+    <div id="step-room" class="container" style="display:none;">
+        <div class="room-auth-form">
+            <input type="text" id="roomName" placeholder="채팅방 이름">
+            <input type="password" id="password" placeholder="비밀번호">
+        </div>
+        <button class="finish-btn blue" onclick="login()">
+            <span class="material-icons">check</span>
+        </button>
+    </div>
+
+    <div id="chat-area" style="display:none;">
+        <div id="chat-header">기송신유</div>
+        <div id="chat-window">
+            <div id="messages"></div>
+            <div id="typing-display"></div>
+        </div>
+        <div id="input-group">
+            <label for="chatImage" class="icon-btn">
+                <span class="material-icons">image</span>
+            </label>
+            <input type="file" id="chatImage" accept="image/*" style="display:none;" onchange="sendImage(this)">
+            <input type="text" id="msg-input" placeholder="메시지를 입력하세요..." onkeypress="if(event.keyCode==13) sendMessage()">
+            <button id="send-btn" onclick="sendMessage()"><span class="material-icons">send</span></button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
