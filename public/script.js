@@ -101,24 +101,31 @@ function typingTimeout() {
 
 // 메시지 수신 및 화면 표시
 socket.on('message', (data) => {
-    const isMe = data.username === currentUser.username;
     const messagesDiv = document.getElementById('messages');
 
-    let contentHtml = "";
-    if (data.text) contentHtml += `<div>${data.text}</div>`;
-    if (data.imageUrl) contentHtml += `<img src="${data.imageUrl}" onload="scrollToBottom()">`;
+    if (data.system) {
+        // 시스템 메시지 (입퇴장 알림) 처리
+        const sysHtml = `<div class="system-msg">${data.text}</div>`;
+        messagesDiv.insertAdjacentHTML('beforeend', sysHtml);
+    } else {
+        // 일반 채팅 메시지 처리
+        const isMe = data.username === currentUser.username;
+        let contentHtml = "";
+        if (data.text) contentHtml += `<div>${data.text}</div>`;
+        if (data.imageUrl) contentHtml += `<img src="${data.imageUrl}" onload="scrollToBottom()">`;
 
-    const msgHtml = `
-        <div class="msg-row ${isMe ? 'me' : 'other'}">
-            ${!isMe ? `<img src="${data.profileImg}" class="profile-pic">` : ''}
-            <div>
-                ${!isMe ? `<div class="user-name">${data.username}</div>` : ''}
-                <div class="bubble">${contentHtml}</div>
+        const msgHtml = `
+            <div class="msg-row ${isMe ? 'me' : 'other'}">
+                ${!isMe ? `<img src="${data.profileImg}" class="profile-pic">` : ''}
+                <div>
+                    ${!isMe ? `<div class="user-name">${data.username}</div>` : ''}
+                    <div class="bubble">${contentHtml}</div>
+                </div>
             </div>
-        </div>
-    `;
+        `;
+        messagesDiv.insertAdjacentHTML('beforeend', msgHtml);
+    }
     
-    messagesDiv.insertAdjacentHTML('beforeend', msgHtml);
     scrollToBottom();
 });
 
