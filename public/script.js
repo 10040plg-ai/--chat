@@ -99,12 +99,12 @@ function typingTimeout() {
     socket.emit('stopTyping', { roomName: currentUser.roomName });
 }
 
-// 메시지 수신 및 화면 표시
-socket.on('message', (data) => {
+// 메시지를 화면에 그리는 함수 (중복 제거)
+function renderMessage(data) {
     const messagesDiv = document.getElementById('messages');
 
     if (data.system) {
-        // 시스템 메시지 (입퇴장 알림) 처리
+        // 시스템 메시지 처리
         const sysHtml = `<div class="system-msg">${data.text}</div>`;
         messagesDiv.insertAdjacentHTML('beforeend', sysHtml);
     } else {
@@ -125,8 +125,19 @@ socket.on('message', (data) => {
         `;
         messagesDiv.insertAdjacentHTML('beforeend', msgHtml);
     }
-    
     scrollToBottom();
+}
+
+// 실시간 메시지 수신
+socket.on('message', (data) => {
+    renderMessage(data);
+});
+
+// 기존 내역 수신 (로그인 직후 서버에서 보냄)
+socket.on('previousMessages', (logs) => {
+    logs.forEach(msg => {
+        renderMessage(msg);
+    });
 });
 
 // 타이핑 표시 제어 수신
